@@ -5,7 +5,9 @@ from surface import highlight_area
 
 pygame.init()
 
-# Constantes
+
+
+# ===== CONSTANTES =====
 text_entry_list = [
     "Em 2022, cinco jovens visionários fundaram uma nova empresa: A AgroConnect.",
     "Valendo-se de suas inovações tecnológicas, a AgroConnect cresceu rapidamente, entrando no palco internacional.",
@@ -20,13 +22,17 @@ text_entry_list = [
 text_entry_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 24)
 game_font = pygame.font.Font("fonts/AdventPro-VariableFont_wdth,wght.ttf", 32)
 
-# Parâmetros Iniciais
+# Configurações Iniciais de Tela
 screen_width = 1080
 screen_height = 640
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("AgroMistery")
 
-# == Imagens ==
+
+
+# ===== IMAGENS =====
+
+# Início
 background = pygame.image.load("images/TitleScreenBg.png").convert()
 background = pygame.transform.scale(background, (screen_width, screen_height))
 
@@ -45,25 +51,27 @@ title_button_rect = title_button.get_rect()
 title_button_rect.center = (screen_width // 2, screen_height // 2 + 50)
 
 
-# PRIMEIRA CENA
+# Primeira Cenas
 first_scene_arrival = pygame.image.load("images/Arrival.jpeg").convert()
 first_scene_arrival = pygame.transform.scale(first_scene_arrival, (screen_width, screen_height))
 first_scene_right_area = pygame.Rect(700, 50, 400, 550)
 first_scene_left_area = pygame.Rect(25, 70, 500, 500)
 
+
+# Segunda Cena
 second_scene = pygame.image.load("images/NextScene.jpeg").convert()
 second_scene = pygame.transform.scale(second_scene, (screen_width, screen_height))
 
+
+
+# ===== MAIN LOOP =====
 
 # Configurações Antes do Loop
 pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
 pygame.mixer.music.play(-1)
 
 currentScreen = "TitleScreen"
-fade_alpha = 255
-
-
-# Main loop
+fade_alpha = 255    # Para transições
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -81,6 +89,7 @@ while True:
             display_dialogue("Eu não acho que seria correto eu sair antes de descobrir tudo o que devo.", game_font, screen_width, screen_height, screen)
 
 
+    # Para Transições
     if fade_alpha > 0:
         fade_surface = pygame.Surface((screen_width, screen_height))
         fade_surface.fill((0, 0, 0))
@@ -95,7 +104,7 @@ while True:
         screen.blit(title_button, title_button_rect)
     elif currentScreen == "PreGame":
         display_text_entry(text_entry_list, text_entry_font, screen, screen_width, screen_height)
-        screen.fill((0, 0, 0))
+        screen.fill((0, 0, 0))  # Após o texto ser exposto, começa a transição para a próxima cena.
         currentScreen = "Entry"
         fade_alpha = 255
         pygame.mixer.music.stop()
@@ -114,5 +123,4 @@ while True:
     elif currentScreen == "Entry02":
         screen.blit(second_scene, (0, 0))
 
-    # Update the display
     pygame.display.update()

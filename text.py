@@ -1,8 +1,8 @@
 import pygame
 
+
+# Função para expor o texto de introdução (História da AgroConnect, o que ocorreu...)
 def display_text_entry(text_list, font, screen, width, height):
-    text_surface = None
-    text_index = 0
     text_delay = 60
 
     for sentence in text_list:
@@ -15,14 +15,15 @@ def display_text_entry(text_list, font, screen, width, height):
             pygame.display.update()
             pygame.time.wait(text_delay)
 
-        pygame.time.wait(1000)  # Wait for a brief moment between sentences
+        pygame.time.wait(1000)
 
 
+# Função de Diálogo em Cenas.
 def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, text_color = (0, 0, 0)):
     dialogue_box_width = screen_width - 100
     dialogue_box_height = 100
-    dialogue_box = pygame.Surface((dialogue_box_width, dialogue_box_height), pygame.SRCALPHA)
-    dialogue_box.fill((250, 250, 250, 25))
+    dialogue_box = pygame.Surface((dialogue_box_width, dialogue_box_height), pygame.SRCALPHA) # SRCALPHA para transparência
+    dialogue_box.fill((250, 250, 250, 25))  # Caixa Transparente, possível mudar no futuro.
     dialogue_rect = dialogue_box.get_rect(center=(screen_width // 2, screen_height - dialogue_box_height // 2))
     
     lines = dialogue_text.split('\n')
@@ -35,4 +36,4 @@ def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, t
     
     screen.blit(dialogue_box, dialogue_rect)
     pygame.display.flip()
-    pygame.time.wait(3000)
+    pygame.time.wait(3000)   # 03 Segundos
