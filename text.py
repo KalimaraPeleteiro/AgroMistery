@@ -19,21 +19,22 @@ def display_text_entry(text_list, font, screen, width, height):
 
 
 # Função de Diálogo em Cenas.
-def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, text_color = (0, 0, 0)):
-    dialogue_box_width = screen_width - 100
-    dialogue_box_height = 100
-    dialogue_box = pygame.Surface((dialogue_box_width, dialogue_box_height), pygame.SRCALPHA) # SRCALPHA para transparência
-    dialogue_box.fill((250, 250, 250, 25))  # Caixa Transparente, possível mudar no futuro.
-    dialogue_rect = dialogue_box.get_rect(center=(screen_width // 2, screen_height - dialogue_box_height // 2))
-    
+def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, text_color = (255, 255, 255)):
+    dialogue_box = pygame.image.load("images/DialogueBox.png").convert_alpha()
+    dialogue_box_rect = dialogue_box.get_rect()
+    dialogue_box_rect.centerx = screen_width / 2
+    dialogue_box_rect.bottom = screen_height
+    dialogue_rect = dialogue_box.get_rect(center=(screen_width // 2, screen_height - 100 // 2))
+
     lines = dialogue_text.split('\n')
+    print(lines)
     y = dialogue_rect.top + 30
+    screen.blit(dialogue_box, dialogue_rect)
     for line in lines:
         text_surface = font.render(line, True, text_color)
         text_rect = text_surface.get_rect(center=(dialogue_rect.centerx, y))
         screen.blit(text_surface, text_rect)
         y += 30
     
-    screen.blit(dialogue_box, dialogue_rect)
     pygame.display.flip()
     pygame.time.wait(3000)   # 03 Segundos

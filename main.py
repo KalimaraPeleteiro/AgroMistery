@@ -77,7 +77,7 @@ second_scene = pygame.transform.scale(second_scene, (screen_width, screen_height
 pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
 pygame.mixer.music.play(-1)
 
-currentScreen = "PreGameTransition"
+currentScreen = "Entry"
 fade_alpha = 255    # Para transições
 while True:
     for event in pygame.event.get():
@@ -89,11 +89,11 @@ while True:
             pygame.mixer.music.load("audio/AudioTextEntry.mp3")
             pygame.mixer.music.play(-1)
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_left_area.collidepoint(event.pos) and currentScreen == "Entry":
-            display_dialogue("Eu acho que o único jeito é seguir em frente, pelo visto.", game_font, screen_width, screen_height, screen)
-            currentScreen = "Entry02"
+            display_dialogue("Pelo visto, o único jeito é seguir em frente.", game_font, screen_width, screen_height, screen)
+            currentScreen = "Hall"
             fade_alpha = 255
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_right_area.collidepoint(event.pos) and currentScreen == "Entry":
-            display_dialogue("Eu não acho que seria correto eu sair antes de descobrir tudo o que devo.", game_font, screen_width, screen_height, screen)
+            display_dialogue("Voltar depois de todo o esforço para chegar até aqui me parece\n um desperdício...", game_font, screen_width, screen_height, screen)
 
 
     # Para Transições
@@ -147,7 +147,6 @@ while True:
         fade_alpha = 255
 
     elif currentScreen == "Entry":
-        print("Foi!")
         screen.blit(first_scene_arrival, (0, 0))
         mouse_pos = pygame.mouse.get_pos()
 
@@ -156,7 +155,7 @@ while True:
         if first_scene_left_area.collidepoint(mouse_pos):
             highlight_area(first_scene_left_area, screen)
 
-    elif currentScreen == "Entry02":
+    elif currentScreen == "Hall":
         screen.blit(second_scene, (0, 0))
 
     pygame.display.update()
