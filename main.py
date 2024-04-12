@@ -1,6 +1,6 @@
 import pygame
 import sys
-from text import display_text_entry, display_dialogue
+from text import display_text_entry, display_dialogue, display_highlight_text
 from surface import highlight_area
 
 pygame.init()
@@ -14,13 +14,14 @@ text_entry_list = [
     "Em 2024, a AgroConnect ultrapassou a Macrosoft, tornando-se a empresa mais valiosa do mundo.",
     "No entanto, em 2026, um processo judicial foi aberto.",
     "Em 2027, a AgroConnect foi forçadamente fechada, seus bens consfiscados, e seus donos, caçados.",
-    "Desde então, mais de 30 anos se passaram.",
-    "Trinta anos, até então, sem respostas sobre os motivos para o ocorrido.",
+    "Desde então, mais de 10 anos se passaram.",
+    "Dez anos, até então, sem respostas sobre os motivos para o ocorrido.",
     "O que aconteceu com a AgroConnect?"
 ]
 
 text_entry_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 24)
 game_font = pygame.font.Font("fonts/AdventPro-VariableFont_wdth,wght.ttf", 32)
+highlight_font = pygame.font.Font("fonts/AdventPro-VariableFont_wdth,wght.ttf", 28)
 
 # Configurações Iniciais de Tela
 screen_width = 1080
@@ -63,6 +64,7 @@ first_scene_arrival = pygame.image.load("images/Arrival.jpeg").convert()
 first_scene_arrival = pygame.transform.scale(first_scene_arrival, (screen_width, screen_height))
 first_scene_right_area = pygame.Rect(700, 50, 400, 550)
 first_scene_left_area = pygame.Rect(25, 70, 500, 500)
+first_scene_center_area = pygame.Rect(500, 300, 225, 75)
 
 
 # Segunda Cena
@@ -94,6 +96,8 @@ while True:
             fade_alpha = 255
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_right_area.collidepoint(event.pos) and currentScreen == "Entry":
             display_dialogue("Voltar depois de todo o esforço para chegar até aqui me parece\n um desperdício...", game_font, screen_width, screen_height, screen)
+        elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_center_area.collidepoint(event.pos) and currentScreen == "Entry":
+            display_dialogue("Em estoniano: Aviso! Propriedade privada à frente!\nInvasores serão punidos!", game_font, screen_width, screen_height, screen)
 
 
     # Para Transições
@@ -152,8 +156,14 @@ while True:
 
         if first_scene_right_area.collidepoint(mouse_pos):
             highlight_area(first_scene_right_area, screen)
+            display_highlight_text(mouse_pos, highlight_font, "Ir Embora?", screen)
         if first_scene_left_area.collidepoint(mouse_pos):
             highlight_area(first_scene_left_area, screen)
+            display_highlight_text(mouse_pos, highlight_font, "Entrar na Instalação?", screen)
+        if first_scene_center_area.collidepoint(mouse_pos):
+            highlight_area(first_scene_center_area, screen)
+            display_highlight_text(mouse_pos, highlight_font, "O que está escrito?", screen)
+
 
     elif currentScreen == "Hall":
         screen.blit(second_scene, (0, 0))

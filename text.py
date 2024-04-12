@@ -27,7 +27,6 @@ def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, t
     dialogue_rect = dialogue_box.get_rect(center=(screen_width // 2, screen_height - 100 // 2))
 
     lines = dialogue_text.split('\n')
-    print(lines)
     y = dialogue_rect.top + 30
     screen.blit(dialogue_box, dialogue_rect)
     for line in lines:
@@ -38,3 +37,10 @@ def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, t
     
     pygame.display.flip()
     pygame.time.wait(3000)   # 03 Segundos
+
+
+def display_highlight_text(mouse_pos, font, text, screen):
+    text = font.render(text, True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.topleft = (mouse_pos[0] - 50, mouse_pos[1] - 50)  # Posição do texto ao lado do mouse
+    screen.blit(text, text_rect)  # Renderiza o texto
