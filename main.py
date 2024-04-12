@@ -51,6 +51,13 @@ title_button_rect = title_button.get_rect()
 title_button_rect.center = (screen_width // 2, screen_height // 2 + 50)
 
 
+# Introdução
+note = pygame.image.load("images/Bilhete.png").convert_alpha()
+note_rect = note.get_rect()
+note_rect.centerx = screen_width / 2
+note_rect.centery = screen_height / 2
+
+
 # Primeira Cenas
 first_scene_arrival = pygame.image.load("images/Arrival.jpeg").convert()
 first_scene_arrival = pygame.transform.scale(first_scene_arrival, (screen_width, screen_height))
@@ -70,7 +77,7 @@ second_scene = pygame.transform.scale(second_scene, (screen_width, screen_height
 pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
 pygame.mixer.music.play(-1)
 
-currentScreen = "TitleScreen"
+currentScreen = "PreGameTransition"
 fade_alpha = 255    # Para transições
 while True:
     for event in pygame.event.get():
@@ -102,17 +109,45 @@ while True:
         screen.blit(title, title_rect)
         screen.blit(studio_logo, studio_logo_rect)
         screen.blit(title_button, title_button_rect)
+
     elif currentScreen == "PreGame":
         display_text_entry(text_entry_list, text_entry_font, screen, screen_width, screen_height)
-        screen.fill((0, 0, 0))  # Após o texto ser exposto, começa a transição para a próxima cena.
-        currentScreen = "Entry"
+        currentScreen = "PreGameTransition"
+        screen.fill((0, 0, 0))
+
+    elif currentScreen == "PreGameTransition":
+        pygame.mixer.music.stop()             # Pausa Música
+        screen.blit(note, note_rect)          # Trazer bilhete
+
+        start_time = pygame.time.get_ticks()  # Usar pygame.wait iria congelar a tela
+        
+        # Aguardar 10 segundos (para ler o bilhete)
+        while pygame.time.get_ticks() - start_time < 10000:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            pygame.display.update()
+
+        # Carrega o fundo da próxima cena
+        screen.blit(first_scene_arrival, (0, 0)) 
+        pygame.mixer.music.load("audio/AudioIntroductionVoice.mp3") # Toca a fala
+        pygame.mixer.music.play(0)
+
+        # Espera a fala finalizar para seguir
+        while pygame.mixer.music.get_busy():
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            pygame.display.update()
+
+        currentScreen = "Entry"         # Sequência
         fade_alpha = 255
-        pygame.mixer.music.stop()
-        display_dialogue("Enfim, de volta...", game_font, screen_width, screen_height, screen, (255, 255, 255))
-        pygame.mixer.music.load("audio/AudioFirstSection.mp3")
-        pygame.mixer.music.set_volume(0.1)
-        pygame.mixer.music.play(-1)
+
     elif currentScreen == "Entry":
+        print("Foi!")
         screen.blit(first_scene_arrival, (0, 0))
         mouse_pos = pygame.mouse.get_pos()
 
@@ -120,6 +155,7 @@ while True:
             highlight_area(first_scene_right_area, screen)
         if first_scene_left_area.collidepoint(mouse_pos):
             highlight_area(first_scene_left_area, screen)
+
     elif currentScreen == "Entry02":
         screen.blit(second_scene, (0, 0))
 
