@@ -79,7 +79,7 @@ second_scene = pygame.transform.scale(second_scene, (screen_width, screen_height
 pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
 pygame.mixer.music.play(-1)
 
-currentScreen = "Entry"
+currentScreen = "TitleScreen"
 fade_alpha = 255    # Para transições
 while True:
     for event in pygame.event.get():
