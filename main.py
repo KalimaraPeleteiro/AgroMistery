@@ -19,6 +19,8 @@ text_entry_list = [
     "O que aconteceu com a AgroConnect?"
 ]
 
+chapter_selection_big_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 48)
+chapter_selection_small_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 24)
 text_entry_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 24)
 game_font = pygame.font.Font("fonts/AdventPro-VariableFont_wdth,wght.ttf", 32)
 highlight_font = pygame.font.Font("fonts/AdventPro-VariableFont_wdth,wght.ttf", 28)
@@ -47,9 +49,21 @@ studio_logo_rect = studio_logo.get_rect()
 studio_logo_rect.centerx = screen_width / 2
 studio_logo_rect.bottom = screen_height
 
-title_button = pygame.image.load("images/TitleStartButton.png").convert_alpha()
-title_button_rect = title_button.get_rect()
-title_button_rect.center = (screen_width // 2, screen_height // 2 + 50)
+title_start_button = pygame.image.load("images/TitleStartButton.png").convert_alpha()
+title_start_button_rect = title_start_button.get_rect()
+title_start_button_rect.center = (screen_width // 2, screen_height // 2 + 50)
+
+title_exit_button = pygame.image.load("images/TitleExitButton.png").convert_alpha()
+title_exit_button_rect = title_exit_button.get_rect()
+title_exit_button_rect.center = (screen_width // 2, screen_height // 2 + 150)
+
+
+# ChapterSelection
+chapter01 = pygame.image.load("images/Chapter01Bg.jpeg").convert()
+chapter01 = pygame.transform.scale(chapter01, (screen_width, screen_height))
+
+chapter01_title = chapter_selection_big_font.render("Capítulo 01", True, (255, 255, 255))
+chapter01_title_rect = chapter01_title.get_rect(top = 25, left = 25)
 
 
 # Introdução
@@ -86,10 +100,14 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN and title_button_rect.collidepoint(event.pos) and currentScreen == "TitleScreen":
-            currentScreen = "PreGame"
-            pygame.mixer.music.load("audio/AudioTextEntry.mp3")
-            pygame.mixer.music.play(-1)
+        elif event.type == pygame.MOUSEBUTTONDOWN and title_start_button_rect.collidepoint(event.pos) and currentScreen == "TitleScreen":
+            currentScreen = "ChapterSelection"
+            pygame.mixer.music.stop()
+            #pygame.mixer.music.load("audio/AudioTextEntry.mp3")
+            #pygame.mixer.music.play(-1)
+        elif event.type == pygame.MOUSEBUTTONDOWN and title_exit_button_rect.collidepoint(event.pos) and currentScreen == "TitleScreen":
+            pygame.quit()
+            sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_left_area.collidepoint(event.pos) and currentScreen == "Entry":
             display_dialogue("Pelo visto, o único jeito é seguir em frente.", game_font, screen_width, screen_height, screen)
             currentScreen = "Hall"
@@ -112,7 +130,12 @@ while True:
         screen.blit(background, (0, 0))
         screen.blit(title, title_rect)
         screen.blit(studio_logo, studio_logo_rect)
-        screen.blit(title_button, title_button_rect)
+        screen.blit(title_start_button, title_start_button_rect)
+        screen.blit(title_exit_button, title_exit_button_rect)
+    
+    if currentScreen == "ChapterSelection":
+        screen.blit(chapter01, (0, 0))
+        screen.blit(chapter01_title, chapter01_title_rect)
 
     elif currentScreen == "PreGame":
         display_text_entry(text_entry_list, text_entry_font, screen, screen_width, screen_height)
