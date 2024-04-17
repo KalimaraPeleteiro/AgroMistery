@@ -2,6 +2,8 @@ import pygame
 import sys
 from text import display_text_entry, display_dialogue, display_highlight_text
 from surface import highlight_area
+from stages.main_menu import main_menu
+from stages.chapter_selection import chapter_selection_first_chapter, chapter_selection_second_chapter
 
 pygame.init()
 
@@ -34,38 +36,6 @@ pygame.display.set_caption("AgroMistery")
 
 
 # ===== IMAGENS =====
-
-# Início
-background = pygame.image.load("images/TitleScreenBg.png").convert()
-background = pygame.transform.scale(background, (screen_width, screen_height))
-
-title = pygame.image.load("images/GameTitle.png").convert_alpha()
-title_rect = title.get_rect()
-title_rect.centerx = screen_width / 2
-title_rect.top = 25
-
-studio_logo = pygame.image.load("images/GameStudioLogo.png").convert_alpha()
-studio_logo_rect = studio_logo.get_rect()
-studio_logo_rect.centerx = screen_width / 2
-studio_logo_rect.bottom = screen_height
-
-title_start_button = pygame.image.load("images/TitleStartButton.png").convert_alpha()
-title_start_button_rect = title_start_button.get_rect()
-title_start_button_rect.center = (screen_width // 2, screen_height // 2 + 50)
-
-title_exit_button = pygame.image.load("images/TitleExitButton.png").convert_alpha()
-title_exit_button_rect = title_exit_button.get_rect()
-title_exit_button_rect.center = (screen_width // 2, screen_height // 2 + 150)
-
-
-# ChapterSelection
-chapter01 = pygame.image.load("images/Chapter01Bg.jpeg").convert()
-chapter01 = pygame.transform.scale(chapter01, (screen_width, screen_height))
-
-chapter01_title = chapter_selection_big_font.render("Capítulo 01", True, (255, 255, 255))
-chapter01_title_rect = chapter01_title.get_rect(top = 25, left = 25)
-
-
 # Introdução
 note = pygame.image.load("images/Bilhete.png").convert_alpha()
 note_rect = note.get_rect()
@@ -94,7 +64,7 @@ pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
 pygame.mixer.music.play(-1)
 
 currentScreen = "TitleScreen"
-fade_alpha = 255    # Para transições
+chapterSelection = 0
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -102,41 +72,37 @@ while True:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN and title_start_button_rect.collidepoint(event.pos) and currentScreen == "TitleScreen":
             currentScreen = "ChapterSelection"
+            chapter_selection = 1
             pygame.mixer.music.stop()
-            #pygame.mixer.music.load("audio/AudioTextEntry.mp3")
-            #pygame.mixer.music.play(-1)
         elif event.type == pygame.MOUSEBUTTONDOWN and title_exit_button_rect.collidepoint(event.pos) and currentScreen == "TitleScreen":
             pygame.quit()
             sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN and chapter01_button_rect.collidepoint(event.pos) and currentScreen == "ChapterSelection":
+            currentScreen = "PreGame"
+            pygame.mixer.music.load("audio/AudioTextEntry.mp3")
+            pygame.mixer.music.play(-1)
+        elif event.type == pygame.MOUSEBUTTONDOWN and chapter01_set_right_rect.collidepoint(event.pos) and currentScreen == "ChapterSelection":
+            chapter_selection = 2
+        elif event.type == pygame.MOUSEBUTTONDOWN and chapter02_set_left_rect.collidepoint(event.pos) and currentScreen == "ChapterSelection":
+            chapter_selection = 1
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_left_area.collidepoint(event.pos) and currentScreen == "Entry":
             display_dialogue("Pelo visto, o único jeito é seguir em frente.", game_font, screen_width, screen_height, screen)
             currentScreen = "Hall"
-            fade_alpha = 255
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_right_area.collidepoint(event.pos) and currentScreen == "Entry":
             display_dialogue("Voltar depois de todo o esforço para chegar até aqui me parece\n um desperdício...", game_font, screen_width, screen_height, screen)
         elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_center_area.collidepoint(event.pos) and currentScreen == "Entry":
             display_dialogue("Em estoniano: Aviso! Propriedade privada à frente!\nInvasores serão punidos!", game_font, screen_width, screen_height, screen)
 
-
-    # Para Transições
-    if fade_alpha > 0:
-        fade_surface = pygame.Surface((screen_width, screen_height))
-        fade_surface.fill((0, 0, 0))
-        fade_surface.set_alpha(fade_alpha)
-        screen.blit(fade_surface, (0, 0))
-        fade_alpha -= 1
-
     if currentScreen == "TitleScreen": 
-        screen.blit(background, (0, 0))
-        screen.blit(title, title_rect)
-        screen.blit(studio_logo, studio_logo_rect)
-        screen.blit(title_start_button, title_start_button_rect)
-        screen.blit(title_exit_button, title_exit_button_rect)
+        title_start_button_rect, title_exit_button_rect = main_menu(screen, screen_width, screen_height)
     
-    if currentScreen == "ChapterSelection":
-        screen.blit(chapter01, (0, 0))
-        screen.blit(chapter01_title, chapter01_title_rect)
-
+    elif currentScreen == "ChapterSelection":
+        if chapter_selection == 1:
+            chapter01_button_rect, chapter01_set_right_rect = chapter_selection_first_chapter(screen, screen_width, screen_height, 
+                                                                                              chapter_selection_big_font, chapter_selection_small_font)
+        elif chapter_selection == 2:
+            chapter02_set_left_rect = chapter_selection_second_chapter(screen, screen_width, screen_height, 
+                                             chapter_selection_big_font, chapter_selection_small_font)
     elif currentScreen == "PreGame":
         display_text_entry(text_entry_list, text_entry_font, screen, screen_width, screen_height)
         currentScreen = "PreGameTransition"
@@ -171,7 +137,6 @@ while True:
             pygame.display.update()
 
         currentScreen = "Entry"         # Sequência
-        fade_alpha = 255
 
     elif currentScreen == "Entry":
         screen.blit(first_scene_arrival, (0, 0))
