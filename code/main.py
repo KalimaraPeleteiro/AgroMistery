@@ -1,26 +1,16 @@
 import pygame
 import sys
-from text import display_text_entry, display_dialogue, display_highlight_text
+from text import display_dialogue, display_highlight_text
 from surface import highlight_area
 from stages.main_menu import main_menu
 from stages.chapter_selection import chapter_selection_first_chapter, chapter_selection_second_chapter
+import moviepy.editor
 
 pygame.init()
 
 
 
 # ===== CONSTANTES =====
-text_entry_list = [
-    "Em 2022, cinco jovens visionários fundaram uma nova empresa: A AgroConnect.",
-    "Valendo-se de suas inovações tecnológicas, a AgroConnect cresceu rapidamente, entrando no palco internacional.",
-    "Em 2024, a AgroConnect ultrapassou a Macrosoft, tornando-se a empresa mais valiosa do mundo.",
-    "No entanto, em 2026, um processo judicial foi aberto.",
-    "Em 2027, a AgroConnect foi forçadamente fechada, seus bens consfiscados, e seus donos, caçados.",
-    "Desde então, mais de 10 anos se passaram.",
-    "Dez anos, até então, sem respostas sobre os motivos para o ocorrido.",
-    "O que aconteceu com a AgroConnect?"
-]
-
 chapter_selection_big_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 48)
 chapter_selection_small_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 24)
 text_entry_font = pygame.font.Font("fonts/ShareTech-Regular.ttf", 24)
@@ -78,9 +68,12 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN and chapter01_button_rect.collidepoint(event.pos) and currentScreen == "ChapterSelection":
-            currentScreen = "PreGame"
-            pygame.mixer.music.load("audio/AudioTextEntry.mp3")
-            pygame.mixer.music.play(-1)
+            currentScreen = "PreGameTransition"
+            video = moviepy.editor.VideoFileClip("video/Intro.mp4")
+            video.preview()
+            screen.fill((0, 0, 0))
+            #pygame.mixer.music.load("audio/AudioTextEntry.mp3")
+            #pygame.mixer.music.play(-1)
         elif event.type == pygame.MOUSEBUTTONDOWN and chapter01_set_right_rect.collidepoint(event.pos) and currentScreen == "ChapterSelection":
             chapter_selection = 2
         elif event.type == pygame.MOUSEBUTTONDOWN and chapter02_set_left_rect.collidepoint(event.pos) and currentScreen == "ChapterSelection":
@@ -103,11 +96,7 @@ while True:
         elif chapter_selection == 2:
             chapter02_set_left_rect = chapter_selection_second_chapter(screen, screen_width, screen_height, 
                                              chapter_selection_big_font, chapter_selection_small_font)
-    elif currentScreen == "PreGame":
-        display_text_entry(text_entry_list, text_entry_font, screen, screen_width, screen_height)
-        currentScreen = "PreGameTransition"
-        screen.fill((0, 0, 0))
-
+            
     elif currentScreen == "PreGameTransition":
         pygame.mixer.music.stop()             # Pausa Música
         screen.blit(note, note_rect)          # Trazer bilhete
