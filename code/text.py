@@ -2,7 +2,7 @@ import pygame
 
 
 # Função de Diálogo em Cenas.
-def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, text_color = (255, 255, 255)):
+def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, text_color = (255, 255, 255), wait_period = 3000):
     dialogue_box = pygame.image.load("images/DialogueBox.png").convert_alpha()
     dialogue_box_rect = dialogue_box.get_rect()
     dialogue_box_rect.centerx = screen_width / 2
@@ -19,7 +19,7 @@ def display_dialogue(dialogue_text, font, screen_width, screen_height, screen, t
         y += 30
     
     pygame.display.flip()
-    pygame.time.wait(3000)   # 03 Segundos
+    pygame.time.wait(wait_period)   # 03 Segundos
 
 
 def display_highlight_text(mouse_pos, font, text, screen):

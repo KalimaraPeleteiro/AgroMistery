@@ -3,12 +3,12 @@ import sys
 
 def pre_game_transition(screen, screen_width, screen_height):
 
-    note = pygame.image.load("images/Bilhete.png").convert_alpha()
+    note = pygame.image.load("images/PreGameTransition/Bilhete.png").convert_alpha()
     note_rect = note.get_rect()
     note_rect.centerx = screen_width / 2
     note_rect.centery = screen_height / 2
 
-    first_scene_arrival = pygame.image.load("images/Arrival.jpeg").convert()
+    first_scene_arrival = pygame.image.load("images/Entry/Arrival.jpeg").convert()
     first_scene_arrival = pygame.transform.scale(first_scene_arrival, (screen_width, screen_height))
 
     pygame.mixer.music.stop()             # Pausa Música

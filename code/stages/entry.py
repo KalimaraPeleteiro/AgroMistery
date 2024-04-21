@@ -4,7 +4,7 @@ from surface import highlight_area
 
 def entry(screen, screen_width, screen_height, dialogue_font):
 
-    first_scene_arrival = pygame.image.load("images/Arrival.jpeg").convert()
+    first_scene_arrival = pygame.image.load("images/Entry/Arrival.jpeg").convert()
     first_scene_arrival = pygame.transform.scale(first_scene_arrival, (screen_width, screen_height))
     first_scene_right_area = pygame.Rect(700, 50, 400, 550)
     first_scene_left_area = pygame.Rect(25, 70, 500, 500)

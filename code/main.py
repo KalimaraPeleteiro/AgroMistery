@@ -1,11 +1,14 @@
 import pygame
 import sys
 from text import display_dialogue
+from sound import play_dirt_walking
+import moviepy.editor
+
 from stages.main_menu import main_menu
 from stages.chapter_selection import chapter_selection_first_chapter, chapter_selection_second_chapter
 from stages.pre_game_transition import pre_game_transition
 from stages.entry import entry
-import moviepy.editor
+from stages.entrance import entrance
 
 pygame.init()
 
@@ -26,20 +29,13 @@ pygame.display.set_caption("AgroMistery")
 
 
 
-# ===== IMAGENS =====
-# Segunda Cena
-second_scene = pygame.image.load("images/NextScene.jpeg").convert()
-second_scene = pygame.transform.scale(second_scene, (screen_width, screen_height))
-
-
-
 # ===== MAIN LOOP =====
 
 # Configurações Antes do Loop
-pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
-pygame.mixer.music.play(-1)
+#pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
+#pygame.mixer.music.play(-1)
 
-currentScreen = "PreGameTransition"
+currentScreen = "Entrance"
 chapterSelection = 0
 while True:
 
@@ -72,12 +68,29 @@ while True:
         elif currentScreen == "Entry":
             if event.type == pygame.MOUSEBUTTONDOWN and first_scene_left_area.collidepoint(event.pos):
                 display_dialogue("Pelo visto, o único jeito é seguir em frente.", game_font, screen_width, screen_height, screen)
-                currentScreen = "Hall"
+                currentScreen = "Entrance"
+                play_dirt_walking()
+
             elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_right_area.collidepoint(event.pos):
                 display_dialogue("Voltar depois de todo o esforço para chegar até aqui me parece\n um desperdício...", game_font, screen_width, screen_height, screen)
             elif event.type == pygame.MOUSEBUTTONDOWN and first_scene_center_area.collidepoint(event.pos):
                 display_dialogue("Em estoniano: Aviso! Propriedade privada à frente!\nInvasores serão punidos!", game_font, screen_width, screen_height, screen)
 
+        elif currentScreen == "Entrance":
+            if event.type == pygame.MOUSEBUTTONDOWN and entry_return_area.collidepoint(event.pos):
+                currentScreen = "Entry"
+            if event.type == pygame.MOUSEBUTTONDOWN and entry_left_area.collidepoint(event.pos):
+                display_dialogue("O dispositivo de reconhecimento facial que usávamos\npara autenticação. Agora, sem energia, é impossível usá-lo.", game_font, screen_width, screen_height, screen)
+            if event.type == pygame.MOUSEBUTTONDOWN and entry_top_area.collidepoint(event.pos):
+                display_dialogue("Em estoniano: 'Entrada 64B'", game_font, screen_width, screen_height, screen)
+            if event.type == pygame.MOUSEBUTTONDOWN and entry_right_area.collidepoint(event.pos):
+                display_dialogue("Em estoniano: 'Amigos, não podemos nos render a essa opressão! Lutaremos\npelos nossos direitos. Compareçam todos ao local de reunião em Tállin!\nPor melhores reinvidicações!'", game_font, screen_width, screen_height, screen, wait_period=5000)
+                display_dialogue("O primeiro sinal de crise de uma empresa sempre serão as greves.\nLembro como se fosse hoje. Parecia um pesadelo.", game_font, screen_width, screen_height, screen)
+                display_dialogue("Se não me engano, a greve durou por volta de 64 dias...", game_font, screen_width, screen_height, screen)
+            if event.type == pygame.MOUSEBUTTONDOWN and entry_center_area.collidepoint(event.pos):
+                display_dialogue("Sem energia, eu posso simplesmente seguir em frente,\npelo visto.", game_font, screen_width, screen_height, screen)
+                play_dirt_walking()
+                currentScreen = "Next"
 
     # Loops de Tela
     if currentScreen == "TitleScreen": 
@@ -98,7 +111,13 @@ while True:
     elif currentScreen == "Entry":
         first_scene_left_area, first_scene_center_area, first_scene_right_area = entry(screen, screen_width, screen_height, highlight_font)
 
-    elif currentScreen == "Hall":
-        screen.blit(second_scene, (0, 0))
+    elif currentScreen == "Entrance":
+        entry_return_area, entry_left_area, entry_right_area, entry_top_area, entry_center_area = entrance(screen, screen_width, screen_height, highlight_font)
+
+    elif currentScreen == "Next":
+        next_image = pygame.image.load("images/Pathways02.jpeg").convert()
+        next_image = pygame.transform.scale(next_image, (screen_width, screen_height))
+
+        screen.blit(next_image, (0, 0))
 
     pygame.display.update()
