@@ -9,6 +9,7 @@ from stages.chapter_selection import chapter_selection_first_chapter, chapter_se
 from stages.pre_game_transition import pre_game_transition
 from stages.entry import entry
 from stages.entrance import entrance
+from stages.stage01 import *
 
 pygame.init()
 
@@ -35,7 +36,7 @@ pygame.display.set_caption("AgroMistery")
 #pygame.mixer.music.load("audio/AudioBgTitulo.mp3")
 #pygame.mixer.music.play(-1)
 
-currentScreen = "Entrance"
+currentScreen = "Stage01-Hall01"
 chapterSelection = 0
 while True:
 
@@ -90,7 +91,39 @@ while True:
             if event.type == pygame.MOUSEBUTTONDOWN and entry_center_area.collidepoint(event.pos):
                 display_dialogue("Sem energia, eu posso simplesmente seguir em frente,\npelo visto.", game_font, screen_width, screen_height, screen)
                 play_dirt_walking()
-                currentScreen = "Next"
+                currentScreen = "Stage01-Passage"
+        
+        elif currentScreen == "Stage01-Passage":
+            play_dirt_walking()
+            display_dialogue("Andando pela instalação, era claro que ninguém havia passado\npor ali havia anos. Nenhuma instalação possuía energia, e as plantas\n haviam invadido quase todos os cômodos.", game_font, screen_width, screen_height, screen, wait_period=5000)
+            display_dialogue("Passeano pelo recinto, chegava-se eventualmente a um hub\nque conectava os caminhos para todas as áreas.", game_font, screen_width, screen_height, screen, wait_period=5000)
+            display_dialogue("Se existe mesmo algo escondido, deve estar aqui. É hora de procurar.", game_font, screen_width, screen_height, screen, wait_period=5000)
+            play_dirt_walking()
+            currentScreen = "Stage01-Hall01"
+        
+        elif currentScreen == "Stage01-Hall01":
+            if event.type == pygame.MOUSEBUTTONDOWN and hall_second_path.collidepoint(event.pos):
+                currentScreen = "Stage02-01"
+            if event.type == pygame.MOUSEBUTTONDOWN and hall_third_path.collidepoint(event.pos):
+                currentScreen = "Stage03-01"
+        
+        elif currentScreen == "Stage02-01":
+            if event.type == pygame.MOUSEBUTTONDOWN and back_option.collidepoint(event.pos):
+                currentScreen = "Stage01-Hall01"
+        
+        elif currentScreen == "Stage03-01":
+            if event.type == pygame.MOUSEBUTTONDOWN and back_option.collidepoint(event.pos):
+                currentScreen = "Stage01-Hall01"
+            if event.type == pygame.MOUSEBUTTONDOWN and next_step.collidepoint(event.pos):
+                currentScreen = "Stage03-02"
+        
+        elif currentScreen == "Stage03-02":
+            if event.type == pygame.MOUSEBUTTONDOWN and back_option.collidepoint(event.pos):
+                currentScreen = "Stage03-01"
+            if event.type == pygame.MOUSEBUTTONDOWN and symbol.collidepoint(event.pos):
+                display_dialogue("Analisando o estranho símbolo, é possível distinguir\num texto estranho em meio aos símbolos intelegíveis em estoniano.", game_font, screen_width, screen_height, screen, wait_period=4000)
+                display_dialogue("4. JyZXLDoS4=", game_font, screen_width, screen_height, screen, wait_period=7000)
+
 
     # Loops de Tela
     if currentScreen == "TitleScreen": 
@@ -114,10 +147,22 @@ while True:
     elif currentScreen == "Entrance":
         entry_return_area, entry_left_area, entry_right_area, entry_top_area, entry_center_area = entrance(screen, screen_width, screen_height, highlight_font)
 
-    elif currentScreen == "Next":
-        next_image = pygame.image.load("images/Pathways02.jpeg").convert()
-        next_image = pygame.transform.scale(next_image, (screen_width, screen_height))
+    elif currentScreen == "Stage01-Passage":
+        passage = pygame.image.load("images/Stage01/Passage.jpeg").convert()
+        passage = pygame.transform.scale(passage, (screen_width, screen_height))
 
-        screen.blit(next_image, (0, 0))
+        screen.blit(passage, (0, 0))
+    
+    elif currentScreen == "Stage01-Hall01":
+        hall_first_path, hall_second_path, hall_third_path, hall_fourth_path = stage01_hall(screen, screen_width, screen_height, highlight_font)
+
+    elif currentScreen == "Stage02-01":
+        back_option = stage02_01(screen, screen_width, screen_height, highlight_font)
+
+    elif currentScreen == "Stage03-01":
+        back_option, next_step = stage03_01(screen, screen_width, screen_height, highlight_font)
+    
+    elif currentScreen == "Stage03-02":
+        back_option, symbol = stage03_02(screen, screen_width, screen_height, highlight_font)
 
     pygame.display.update()
